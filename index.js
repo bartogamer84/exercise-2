@@ -60,6 +60,38 @@ app.post("/send", (req, res) => {
     res.status(200).send("Datos recibidos correctamente");
 })
 
+app.put("/updateCard/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const card = await Card.findByIdAndUpdate(
+        id,
+        req.body,
+        { new: true, runValidators: true }
+        );
+
+        if(!card) {
+        return res.status(404).json({
+            success:false,
+            message: "Carta no encontrada"
+        });
+        }
+
+        res.status(200).json({
+        success: true,
+        message: "Carta actualizada",
+        data: card
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+        success: false,
+        message: "Error al actualizar",
+        error: error.message
+        });
+    }
+});
+
+
 
 app.get("/hello", (req, res) => {
     res.status(200).send("Hola mundo desde node.js");
