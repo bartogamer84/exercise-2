@@ -39,6 +39,21 @@ app.get("/getCard/:id", async (req, res) => {
     }
 });
 
+app.delete("/deleteCard/:id", async (req, res) => {
+    try {
+        const { id } = req.params; 
+        const deletedCard = await Card.findByIdAndDelete(id); 
+
+        if (!deletedCard) {
+        return res.status(404).json({ message: "Card not found" });
+        }
+        res.status(200).json({ message: "Card deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error deleting card" });
+    }
+});
+
 app.post("/send", (req, res) => {
     const { user, email } = req.body;
     console.log("Datos recibidos:" + user + "" + email);
